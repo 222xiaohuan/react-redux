@@ -60,18 +60,28 @@
         }
       };
 
-      const todoApp = (state={}, action) => {
-        return{
-          todos: todos(
-            state.todos,
-            action
-          ),
-          visibilityFilter: visibilityFilter(
-            state.visibilityFilter,
-            action
-          )
+      // const { combineReducers } = Redux;
+      const combineReducers = (reducers) => {
+        return (state = {}, action) => {
+          return Object.keys(reducers).reduce(
+            (nextState, key) => {
+              console.log("nextState[key]" + nextState[key] );
+              console.log("reducers[key]" + reducers[key] );
+              nextState[key] = reducers[key](
+                state[key],
+                action
+              );
+              return nextState;
+            },
+            {}
+          );
         };
       };
+
+      const todoApp = combineReducers({
+        todos: todos,
+        visibilityFilter: visibilityFilter
+      });
 
       const { createStore } = Redux;
       //const store = createStore(todos);
